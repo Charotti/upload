@@ -6,14 +6,15 @@ const app = express();
 const port = 8000;
 const upload = multer({ dest: "public/uploads" });
 app.use(express.static("public"));
-
+app.use(express.json());
+const users = [];
 app.post("/user", upload.single("image"), (req, res) => {
   fs.renameSync(
     req.file.path,
     path.join(req.file.destination, req.file.originalname)
   );
-
-  res.send("Image received");
+  users.push(req.body.name);
+  res.json({ message: "Image received", users });
 });
 
 app.listen(port, () => {
